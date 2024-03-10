@@ -1,19 +1,30 @@
 import "./style.css";
 
-function createTeamRequest() {
+function $(selector) {
+  return document.querySelector(selector);
+}
+
+function createTeamRequest(team) {
   fetch("http://localhost:3000/teams-json/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      promotion: "WON3",
-      members: "Your Name",
-      name: "CV",
-      url: "https://github.com/nmatei/teams-networking"
-    })
+    body: JSON.stringify(team)
   });
 }
+
+function deleteTeamRequest(id) {
+  fetch("http://localhost:3000/teams-json/delete", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ id: id })
+  });
+}
+// make deleteTeamRequest available from global content
+window.deleteTeamRequest = deleteTeamRequest;
 
 function getTeamAsHTML(team) {
   return `<tr>
@@ -21,16 +32,18 @@ function getTeamAsHTML(team) {
     <td>${team.members}</td>
     <td>${team.name}</td>
     <td>${team.url}</td>
-    <td>x</td>
+    <td>
+      <a href="#" data-id="${team.id}">✖</a> 
+    </td>
   </tr>`;
 }
 
 function renderTeams(teams) {
   // console.warn("render", teams);
   const teamsHTML = teams.map(getTeamAsHTML);
-  //console.info(teamsHTML);
+  // console.info(teamsHTML);
 
-  document.querySelector("#teamsTable tbody").innerHTML = teamsHTML.join("");
+  $("#teamsTable tbody").innerHTML = teamsHTML.join("");
 }
 
 function loadTeams() {
@@ -42,15 +55,31 @@ function loadTeams() {
     });
 }
 
+function getFormValues() {
+  return {
+    promotion: $("input[name=promotion]").value,
+    members: $("input[name=members]").value,
+    name: $("input[name=name]").value,
+    url: $("input[name=url]").value
+  };
+}
+
 function onSubmit(e) {
   e.preventDefault();
-  console.warn("please save all values");
-  createTeamRequest();
+  let team = getFormValues();
+  createTeamRequest(team);
   window.location.reload();
 }
 
 function initEvents() {
-  document.querySelector("#teamsForm").addEventListener("submit", onSubmit);
+  $("#teamsForm").addEventListener("submit", onSubmit);
+  $("#teamsTable tbody").addEventListener("click", e => {
+    if (e.target.matches("a")) {
+      const id = e.target.dataset.id;
+      deleteTeamRequest(id);
+      window.location.reload();
+    }
+  });
 }
 
 initEvents();

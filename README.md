@@ -7,8 +7,7 @@ cd node-api/ - move to this directory-->
 ## Start project
 
 ```sh
-cd ../node-api
-npm start
+cd ../node-api && npm start
 ```
 
 ```sh

@@ -71,6 +71,9 @@ function onSubmit(e) {
   window.location.reload();
 }
 
+createTeamRequest(team);
+window.location.reload();
+
 function initEvents() {
   $("#teamsForm").addEventListener("submit", onSubmit);
   $("#teamsTable tbody").addEventListener("click", e => {

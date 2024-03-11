@@ -1,5 +1,7 @@
 import "./style.css";
 
+let allTeams = [];
+
 function $(selector) {
   return document.querySelector(selector);
 }
@@ -62,6 +64,7 @@ function loadTeams() {
   const promise = fetch("http://localhost:3000/teams-json")
     .then(r => r.json())
     .then(teams => {
+      allTeams = teams;
       renderTeams(teams);
       return teams;
     });
@@ -83,6 +86,13 @@ function onSubmit(e) {
   window.location.reload();
 }
 
+function startEdit(id) {
+  const team = allTeams.find(team => {
+    return id === team.id;
+  });
+  console.warn("click on edit %o", id, team);
+}
+
 function initEvents() {
   $("#teamsForm").addEventListener("submit", onSubmit);
   $("#teamsTable tbody").addEventListener("click", e => {
@@ -91,7 +101,9 @@ function initEvents() {
       deleteTeamRequest(id);
       window.location.reload();
     } else if (e.target.matches("a.edit-btn")) {
-      console.warn("click on edit");
+      //const id = e.target.getAttribute("data-id");
+      const id = e.target.dataset.id;
+      startEdit(id);
     }
   });
 }

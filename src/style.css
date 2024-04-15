@@ -93,6 +93,17 @@ table {
   width: 100%;
 }
 
+.tbar {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  gap: 5px;
+}
+
+.tfill {
+  flex: 1;
+}
+
 footer {
   padding: 5px;
   background-color: lightblue;
